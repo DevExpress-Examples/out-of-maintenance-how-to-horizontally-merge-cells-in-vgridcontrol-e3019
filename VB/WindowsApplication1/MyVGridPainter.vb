@@ -1,20 +1,14 @@
-﻿Imports System
-Imports System.Drawing
-Imports DevExpress.XtraVerticalGrid.Painters
-Imports DevExpress.Utils
+﻿Imports System.Reflection
 Imports DevExpress.XtraVerticalGrid.Events
+Imports DevExpress.XtraVerticalGrid.Painters
 Imports DevExpress.XtraVerticalGrid.ViewInfo
-Imports System.Reflection
 
 Namespace WindowsApplication1
     Public Class MyVGridPainter
         Inherits VGridPainter
-
         Public Sub New(ByVal eventHelper As PaintEventHelper)
             MyBase.New(eventHelper)
-
         End Sub
-
         Private Function GetValueBoundsByRecordIndex(ByVal vInfo As DevExpress.XtraVerticalGrid.ViewInfo.BaseRowViewInfo, ByVal recordIndex As Integer) As Rectangle
             Dim bounds As Rectangle = Rectangle.Empty
             For Each valueInfo As RowValueInfo In vInfo.ValuesInfo
@@ -34,7 +28,7 @@ Namespace WindowsApplication1
             If vInfo.ValuesInfo.Count > recordIndex + 2 Then
                 bounds.Width += GetValueBoundsByRecordIndex(vInfo, recordIndex + 1).Right - bounds.Right
             Else
-                bounds.Width += bounds.Width
+                bounds.Width += vi.RowsViewInfo(0).RowRect.Right - bounds.Right
             End If
             Return bounds
         End Function
@@ -43,7 +37,6 @@ Namespace WindowsApplication1
                 MyBase.DrawRowValueCellCore(e, pb, bvi, vi)
                 Return
             End If
-
             If e.RecordIndex Mod 2 = 0 OrElse vi.RowsViewInfo(0).ValuesInfo(0).RecordIndex = e.RecordIndex Then
                 Dim bounds As Rectangle = GetBoundsByRecordIndex(e.RecordIndex, vi)
                 bvi.Bounds = bounds
@@ -58,11 +51,8 @@ Namespace WindowsApplication1
                 Return
             End If
         End Sub
-
-
         Protected Overrides Sub DrawLines(ByVal LinesInfo As DevExpress.XtraVerticalGrid.ViewInfo.Lines, ByVal client As Rectangle)
             'base.DrawLines(LinesInfo, client);
         End Sub
-
     End Class
 End Namespace
